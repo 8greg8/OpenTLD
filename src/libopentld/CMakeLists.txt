@@ -1,4 +1,8 @@
+cmake_minimum_required(VERSION 3.11)
+project(liblibopentld VERSION 1.0.0 LANGUAGES CXX)
 
+################################################################################
+# Declare dependency
 include_directories(imacq
     mftracker
     tld
@@ -44,5 +48,26 @@ add_library(libopentld
 
 target_link_libraries(libopentld ${OpenCV_LIBS} cvblobs)
 
-set_target_properties(libopentld PROPERTIES OUTPUT_NAME opentld)
+#target_include_directories(
+#    PUBLIC
+#        $<INSTALL_INTERFACE:tld>
+#)
 
+################################################################################
+# Instalation instructions
+include(GNUInstallDirs)
+
+install(TARGETS libopentld
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" # for static lib    
+    )
+
+set_target_properties(libopentld PROPERTIES 
+        OUTPUT_NAME opentld
+        VERSION "${PROJECT_VERSION}"
+        SOVERSION "${PROJECT_VERSION_MAJOR}"
+)
+
+FILE(GLOB_RECURSE PUBLIC_HEADERS tld/*.h)
+# Install public headers 
+install(FILES ${PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tld)
